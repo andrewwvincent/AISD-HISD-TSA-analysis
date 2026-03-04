@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSA Facility Analysis - AISD & HISD School Closures</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  #map { width: 100%; height: 100vh; }
+  .legend {
+    background: white; padding: 12px 16px; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); line-height: 1.8; font-size: 13px;
+  }
+  .legend h4 { margin-bottom: 6px; font-size: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-dot {
+    width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3); flex-shrink: 0;
+  }
+  .filter-panel {
+    background: white; padding: 12px 16px; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 13px; max-width: 220px;
+  }
+  .filter-panel h4 { margin-bottom: 8px; font-size: 14px; }
+  .filter-panel label { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 2px 0; }
+  .filter-panel input[type="checkbox"] { cursor: pointer; }
+  .popup-content { font-size: 13px; line-height: 1.5; min-width: 280px; }
+  .popup-content h3 { font-size: 15px; margin-bottom: 4px; }
+  .popup-tier {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; color: white; margin-bottom: 8px;
+  }
+  .popup-content .metric-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
+    margin: 8px 0; padding: 8px; background: #f7f8fa; border-radius: 6px;
+  }
+  .metric-label { color: #666; font-size: 11px; }
+  .metric-value { font-weight: 600; font-size: 13px; }
+  .popup-content a.report-link {
+    display: inline-block; margin-top: 8px; padding: 6px 14px;
+    background: #2563eb; color: white; border-radius: 6px;
+    text-decoration: none; font-size: 12px; font-weight: 500;
+  }
+  .popup-content a.report-link:hover { background: #1d4ed8; }
+  .tier1 { background: #16a34a; }
+  .tier2 { background: #2563eb; }
+  .tier3 { background: #f59e0b; }
+  .tier4 { background: #dc2626; }
+  .notviable { background: #6b7280; }
+  .info-bar {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    z-index: 1000; background: white; padding: 8px 20px; border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-size: 14px; font-weight: 500;
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="info-bar">
+  TSA Facility Analysis &mdash; <span id="school-count">45</span> AISD & HISD School Closure Sites
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const TIER_COLORS = {
+  'Tier 1 - Excellent': '#16a34a',
+  'Tier 2 - Good': '#2563eb',
+  'Tier 3 - Possible': '#f59e0b',
+  'Tier 4 - Uncertain': '#dc2626',
+  'Not Viable': '#6b7280'
+};
+const TIER_CLASSES = {
+  'Tier 1 - Excellent': 'tier1',
+  'Tier 2 - Good': 'tier2',
+  'Tier 3 - Possible': 'tier3',
+  'Tier 4 - Uncertain': 'tier4',
+  'Not Viable': 'notviable'
+};
+
+function fmt(v) { return v != null ? Number(v).toLocaleString('en-US', {maximumFractionDigits: 0}) : 'N/A'; }
+function fmtCurrency(v) { return v != null ? '$' + Number(v).toLocaleString('en-US', {maximumFractionDigits: 0}) : 'N/A'; }
+function fmtPct(v) { return v != null ? (Number(v) * 100).toFixed(0) + '%' : 'N/A'; }
+function slug(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''); }
+
+function makePopup(s) {
+  const tierClass = TIER_CLASSES[s.tier] || 'notviable';
+  let html = `<div class="popup-content">
+    <h3>${s.name}</h3>
+    <span class="popup-tier ${tierClass}">${s.tier}</span>
+    <div style="color:#666;font-size:12px">${s.district} &bull; ${s.address || 'Address N/A'}</div>
+    <div class="metric-grid">
+      <div><span class="metric-label">Demand Score</span><br><span class="metric-value">${s.demand_score != null ? s.demand_score : 'N/A'}</span></div>
+      <div><span class="metric-label">ES ($25k)</span><br><span class="metric-value">${fmt(s.es_25k)}</span></div>
+      <div><span class="metric-label">Wealth ($100k+)</span><br><span class="metric-value">${fmt(s.ws_100k)}</span></div>
+      <div><span class="metric-label">Raw Kids 5-17</span><br><span class="metric-value">${fmt(s.raw_kids)}</span></div>
+      <div><span class="metric-label">Building</span><br><span class="metric-value">${s.sqft ? fmt(s.sqft) + ' sqft' : 'N/A'}</span></div>
+      <div><span class="metric-label">Lot</span><br><span class="metric-value">${s.acres ? s.acres + ' acres' : 'N/A'}</span></div>
+    </div>
+    <a class="report-link" href="reports/${slug(s.name)}.html" target="_blank">View Full Report &rarr;</a>
+  </div>`;
+  return html;
+}
+
+function createIcon(color) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      width:16px;height:16px;border-radius:50%;background:${color};
+      border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.35);
+    "></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+    popupAnchor: [0, -12]
+  });
+}
+
+let map, markers = [], allSchools = [];
+
+async function init() {
+  const resp = await fetch('schools_data.json');
+  allSchools = await resp.json();
+
+  map = L.map('map').setView([30.0, -96.5], 8);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Add legend
+  const legend = L.control({ position: 'bottomright' });
+  legend.onAdd = function() {
+    const div = L.DomUtil.create('div', 'legend');
+    div.innerHTML = '<h4>Tiers</h4>' +
+      Object.entries(TIER_COLORS).map(([tier, color]) =>
+        `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${tier}</div>`
+      ).join('');
+    return div;
+  };
+  legend.addTo(map);
+
+  // Add filter panel
+  const filter = L.control({ position: 'topright' });
+  filter.onAdd = function() {
+    const div = L.DomUtil.create('div', 'filter-panel');
+    div.innerHTML = '<h4>Filter Tiers</h4>' +
+      Object.keys(TIER_COLORS).map(tier =>
+        `<label><input type="checkbox" checked data-tier="${tier}"> ${tier}</label>`
+      ).join('');
+    L.DomEvent.disableClickPropagation(div);
+    div.addEventListener('change', updateMarkers);
+    return div;
+  };
+  filter.addTo(map);
+
+  updateMarkers();
+}
+
+function updateMarkers() {
+  // Remove existing
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  // Get checked tiers
+  const checks = document.querySelectorAll('.filter-panel input[type="checkbox"]');
+  const activeTiers = new Set();
+  checks.forEach(cb => { if (cb.checked) activeTiers.add(cb.dataset.tier); });
+
+  let count = 0;
+  const bounds = [];
+  allSchools.forEach(s => {
+    if (!s.lat || !s.lon) return;
+    if (!activeTiers.has(s.tier)) return;
+    const color = TIER_COLORS[s.tier] || '#6b7280';
+    const marker = L.marker([s.lat, s.lon], { icon: createIcon(color) })
+      .bindPopup(makePopup(s), { maxWidth: 320 })
+      .addTo(map);
+    markers.push(marker);
+    bounds.push([s.lat, s.lon]);
+    count++;
+  });
+
+  document.getElementById('school-count').textContent = count;
+  if (bounds.length) map.fitBounds(bounds, { padding: [40, 40] });
+}
+
+init();
+</script>
+</body>
+</html>

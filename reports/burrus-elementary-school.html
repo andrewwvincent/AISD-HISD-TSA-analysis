@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burrus Elementary School - TSA Facility Report</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f3f4f6; color: #1f2937; }
+  .header { background: white; padding: 24px 32px; border-bottom: 4px solid #16a34a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .header h1 { font-size: 24px; margin-bottom: 4px; }
+  .header .meta { color: #6b7280; font-size: 14px; }
+  .tier-badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: white; background: #16a34a; margin-top: 8px; }
+  .back-link { display: inline-block; margin-bottom: 12px; color: #2563eb; text-decoration: none; font-size: 14px; }
+  .back-link:hover { text-decoration: underline; }
+  .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .card h2 { font-size: 16px; margin-bottom: 12px; color: #374151; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 6px 0; font-size: 14px; border-bottom: 1px solid #f3f4f6; }
+  td:first-child { color: #6b7280; }
+  td.num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .score-highlight { text-align: center; padding: 16px; background: #f0fdf4; border-radius: 8px; margin-bottom: 16px; }
+  .score-highlight .score { font-size: 36px; font-weight: 700; color: #16a34a; }
+  .score-highlight .label { font-size: 12px; color: #6b7280; margin-top: 2px; }
+  .detail-section { margin-bottom: 12px; }
+  .detail-section h3 { font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 4px; }
+  .detail-section p { font-size: 13px; color: #4b5563; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="container" style="padding:0">
+    <a class="back-link" href="../index.html">&larr; Back to Map</a>
+    <h1>Burrus Elementary School</h1>
+    <div class="meta">HISD &bull; 701 East 33rd Street, Houston, TX 77022</div>
+    <span class="tier-badge">Tier 1 - Excellent</span>
+  </div>
+</div>
+<div class="container">
+  <div class="score-highlight"><div class="score">54.1</div><div class="label">Demand Score</div></div>
+  <div class="grid">
+    <div class="card">
+      <h2>Enrollment Scores by Tuition</h2>
+      <table><tr><td>Free (Tuition Factor=1)</td><td class="num">6,262</td></tr>
+<tr><td>$10,000</td><td class="num">5,645</td></tr>
+<tr><td>$15,000</td><td class="num">4,923</td></tr>
+<tr><td>$20,000</td><td class="num">4,405</td></tr>
+<tr><td>$25,000</td><td class="num">3,885</td></tr>
+</table>
+    </div>
+    <div class="card">
+      <h2>Wealth &amp; Demographics</h2>
+      <table>
+        <tr><td>Wealth Score ($100k+ AGI)</td><td class="num">40,052</td></tr>
+        <tr><td>Raw Kids 5-17 (20-min drive)</td><td class="num">145,720</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Property Details</h2>
+      <table><tr><td>Building Size</td><td>66,000 sqft</td></tr>
+<tr><td>Lot Size</td><td>5.26 acres</td></tr>
+<tr><td>Year Built</td><td>1928</td></tr>
+<tr><td>Has Gym</td><td>Yes</td></tr>
+<tr><td>Building Size Class</td><td>Large</td></tr>
+<tr><td>Outdoor Space</td><td>Good (5-10 ac)</td></tr>
+</table>
+    </div>
+    
+    <div class="card">
+      <h2>Tuition &amp; Revenue Strategy</h2>
+      <table>
+        <tr><td>Building Capacity</td><td class="num">528 students</td></tr>
+        <tr><td>Optimal Tuition</td><td>$25K (with $10K ESA)</td></tr>
+        <tr><td>Students at Optimal Fill</td><td class="num">492</td></tr>
+        <tr><td>Fill Rate</td><td class="num">93%</td></tr>
+        <tr><td>Annual Revenue</td><td class="num">$12,300,000</td></tr>
+        <tr><td>Rehab Cost (Mid)</td><td class="num">$13,850,000</td></tr>
+        <tr><td>Payback Period</td><td class="num">1.1 years</td></tr>
+      </table>
+    </div>
+  </div>
+  
+    <div class="card">
+      <h2>Sports Viability</h2>
+      <div class="detail-section"><h3>Indoor Sports</h3><p>Basketball, Volleyball, Wrestling, Martial Arts, Cheer/Tumbling, Fencing, Dance/Fitness, Parkour, Gymnastics (basic)</p></div>
+      <div class="detail-section"><h3>Outdoor Sports</h3><p>Youth Soccer (small-sided), Tennis (2 courts), Flag Football, Outdoor Fitness, Youth Baseball/Softball, Full Soccer (11v11), 4-Lane Training Track, Full Baseball Diamond, Tennis (4-6 courts)</p></div>
+      <div class="detail-section"><h3>TSA Sport-Specific Match</h3><p>Basketball Academy, Gymnastics Academy, Cheer Academy, Baseball Academy, Soccer Academy, Martial Arts Academy, Multi-Sport (Lake Travis model)</p></div>
+    </div>
+  <div class="card"><h2>Site Notes</h2><div class="detail-section"><h3>Current Status</h3><p>Houston ISD-owned, approved for closure end of 2025-26 school year (Feb 2026 vote), students rezoned</p></div>
+<div class="detail-section"><h3>Building Condition</h3><p>Good, recently renovated (MEP, glazing, accessibility)</p></div>
+<div class="detail-section"><h3>Neighborhood</h3><p>Historic residential (Independence Heights, first Black municipality in TX), mix</p></div>
+<div class="detail-section"><h3>Known Issues</h3><p>None found; potential standard issues for age (asbestos? flood zone near bayous?</p></div>
+</div>
+</div>
+</body>
+</html>
