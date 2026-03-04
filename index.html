@@ -99,6 +99,7 @@ function makePopup(s) {
       <div><span class="metric-label">Lot</span><br><span class="metric-value">${s.acres ? s.acres + ' acres' : 'N/A'}</span></div>
     </div>
     <a class="report-link" href="reports/${slug(s.name)}.html" target="_blank">View Full Report &rarr;</a>
+    ${s.pdf_available ? `<a class="report-link" href="pdfs/${slug(s.name)}.pdf" target="_blank" style="background:#dc2626;margin-left:6px">PDF &darr;</a>` : ''}
   </div>`;
   return html;
 }

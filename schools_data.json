@@ -33,7 +33,8 @@
     "fill_rate": 0.238805970149254,
     "annual_revenue": 6400000,
     "rehab_cost_mid": 14750000,
-    "payback_years": 2.3046875
+    "payback_years": 2.3046875,
+    "pdf_available": true
   },
   {
     "name": "Grimes Elementary School",
@@ -69,7 +70,8 @@
     "fill_rate": 1,
     "annual_revenue": 8550000,
     "rehab_cost_mid": 11760000,
-    "payback_years": 1.37543859649123
+    "payback_years": 1.37543859649123,
+    "pdf_available": true
   },
   {
     "name": "Barrington Elementary School",
@@ -105,7 +107,8 @@
     "fill_rate": 0.79375,
     "annual_revenue": 12700000,
     "rehab_cost_mid": 24000000,
-    "payback_years": 1.88976377952756
+    "payback_years": 1.88976377952756,
+    "pdf_available": true
   },
   {
     "name": "Sunset Valley Elementary School",
@@ -141,7 +144,8 @@
     "fill_rate": 0.81203007518797,
     "annual_revenue": 10800000,
     "rehab_cost_mid": 14750000,
-    "payback_years": 1.36574074074074
+    "payback_years": 1.36574074074074,
+    "pdf_available": true
   },
   {
     "name": "Oak Springs Elementary School",
@@ -177,7 +181,8 @@
     "fill_rate": 1,
     "annual_revenue": 9425000,
     "rehab_cost_mid": 9200000,
-    "payback_years": 0.976127320954907
+    "payback_years": 0.976127320954907,
+    "pdf_available": true
   },
   {
     "name": "Dawson Elementary School",
@@ -213,7 +218,8 @@
     "fill_rate": 1,
     "annual_revenue": 11050000,
     "rehab_cost_mid": 6710000,
-    "payback_years": 0.607239819004525
+    "payback_years": 0.607239819004525,
+    "pdf_available": true
   },
   {
     "name": "Maplewood Elementary School",
@@ -249,7 +255,8 @@
     "fill_rate": 1,
     "annual_revenue": 11000000,
     "rehab_cost_mid": 6710000,
-    "payback_years": 0.61
+    "payback_years": 0.61,
+    "pdf_available": true
   },
   {
     "name": "Burrus Elementary School",
@@ -285,7 +292,8 @@
     "fill_rate": 0.931818181818182,
     "annual_revenue": 12300000,
     "rehab_cost_mid": 13850000,
-    "payback_years": 1.1260162601626
+    "payback_years": 1.1260162601626,
+    "pdf_available": true
   },
   {
     "name": "Palm Elementary School",
@@ -321,7 +329,8 @@
     "fill_rate": 0.10126582278481,
     "annual_revenue": 1600000,
     "rehab_cost_mid": 24000000,
-    "payback_years": 15
+    "payback_years": 15,
+    "pdf_available": true
   },
   {
     "name": "Widen Elementary School",
@@ -357,7 +366,8 @@
     "fill_rate": 0.302013422818792,
     "annual_revenue": 4500000,
     "rehab_cost_mid": 24000000,
-    "payback_years": 5.33333333333333
+    "payback_years": 5.33333333333333,
+    "pdf_available": true
   },
   {
     "name": "Winn Montessori School",
@@ -393,7 +403,8 @@
     "fill_rate": 0.731884057971015,
     "annual_revenue": 10100000,
     "rehab_cost_mid": 24000000,
-    "payback_years": 2.37623762376238
+    "payback_years": 2.37623762376238,
+    "pdf_available": true
   },
   {
     "name": "Rhoads Elementary School",
@@ -429,7 +440,8 @@
     "fill_rate": 1,
     "annual_revenue": 7950000,
     "rehab_cost_mid": 9200000,
-    "payback_years": 1.15723270440252
+    "payback_years": 1.15723270440252,
+    "pdf_available": true
   },
   {
     "name": "McDade Elementary School",
@@ -465,7 +477,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Brooke Elementary School",
@@ -501,7 +514,8 @@
     "fill_rate": 0.906698564593301,
     "annual_revenue": 9475000,
     "rehab_cost_mid": 9200000,
-    "payback_years": 0.970976253298153
+    "payback_years": 0.970976253298153,
+    "pdf_available": true
   },
   {
     "name": "Ridgetop Elementary School",
@@ -537,7 +551,8 @@
     "fill_rate": 1,
     "annual_revenue": 7000000,
     "rehab_cost_mid": 10260000,
-    "payback_years": 1.46571428571429
+    "payback_years": 1.46571428571429,
+    "pdf_available": true
   },
   {
     "name": "Alcott Elementary School",
@@ -573,7 +588,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Hobby Elementary School",
@@ -609,7 +625,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Becker Elementary School",
@@ -645,7 +662,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Reilly Elementary School",
@@ -681,7 +699,8 @@
     "fill_rate": 1,
     "annual_revenue": 8325000,
     "rehab_cost_mid": 8300000,
-    "payback_years": 0.996996996996997
+    "payback_years": 0.996996996996997,
+    "pdf_available": true
   },
   {
     "name": "Fleming Middle School",
@@ -717,7 +736,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Franklin Elementary School",
@@ -753,7 +773,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Cage Elementary School",
@@ -789,7 +810,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Port Houston Elementary School",
@@ -825,7 +847,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Gulfton Middle College (Middle College HS at HCC Gulfton)",
@@ -861,7 +884,8 @@
     "fill_rate": 1,
     "annual_revenue": 7100000,
     "rehab_cost_mid": 9960000,
-    "payback_years": 1.40281690140845
+    "payback_years": 1.40281690140845,
+    "pdf_available": true
   },
   {
     "name": "McReynolds Middle School",
@@ -897,7 +921,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Briscoe Elementary School",
@@ -933,7 +958,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Las Americas | 6501",
@@ -969,7 +995,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Kennedy Elementary School",
@@ -1005,7 +1032,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Middle College High School At Hcc Gulfton",
@@ -1041,7 +1069,8 @@
     "fill_rate": 1,
     "annual_revenue": 16375000,
     "rehab_cost_mid": 18500000,
-    "payback_years": 1.12977099236641
+    "payback_years": 1.12977099236641,
+    "pdf_available": true
   },
   {
     "name": "Franklin Elementary (former site)",
@@ -1077,7 +1106,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Ross Elementary School",
@@ -1113,7 +1143,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Martin Middle School",
@@ -1149,7 +1180,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Dobie Middle School",
@@ -1185,7 +1217,8 @@
     "fill_rate": 0.383677298311445,
     "annual_revenue": 10225000,
     "rehab_cost_mid": 20300000,
-    "payback_years": 1.98533007334963
+    "payback_years": 1.98533007334963,
+    "pdf_available": false
   },
   {
     "name": "Sims Elementary School",
@@ -1221,7 +1254,8 @@
     "fill_rate": 0.985955056179775,
     "annual_revenue": 8775000,
     "rehab_cost_mid": 9200000,
-    "payback_years": 1.04843304843305
+    "payback_years": 1.04843304843305,
+    "pdf_available": false
   },
   {
     "name": "Mading Elementary School",
@@ -1257,7 +1291,8 @@
     "fill_rate": 0.456395348837209,
     "annual_revenue": 7850000,
     "rehab_cost_mid": 13850000,
-    "payback_years": 1.76433121019108
+    "payback_years": 1.76433121019108,
+    "pdf_available": false
   },
   {
     "name": "Stevens Elementary School (Lulu M. Stevens Elementary)",
@@ -1293,7 +1328,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": false
   },
   {
     "name": "Webb Middle School",
@@ -1329,7 +1365,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": false
   },
   {
     "name": "Burnet Middle School",
@@ -1365,7 +1402,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Linder Elementary School",
@@ -1401,7 +1439,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Pecan Springs Elementary School",
@@ -1437,7 +1476,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Bryker Woods Elementary School",
@@ -1473,7 +1513,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Metz Elementary School",
@@ -1509,7 +1550,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Pease Elementary School",
@@ -1545,7 +1587,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "International High School (note: not at this address; current at 7104 Berkman Dr)",
@@ -1581,7 +1624,8 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   },
   {
     "name": "Henderson N Elementary School (Nathaniel Q. Henderson Elementary)",
@@ -1617,6 +1661,7 @@
     "fill_rate": null,
     "annual_revenue": null,
     "rehab_cost_mid": null,
-    "payback_years": null
+    "payback_years": null,
+    "pdf_available": true
   }
 ]

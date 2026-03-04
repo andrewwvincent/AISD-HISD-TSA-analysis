@@ -28,8 +28,16 @@ TIER_COLORS = {
     'Not Viable': '#6b7280',
 }
 
+def get_pdf_link(s):
+    s_slug = slug(s['name'])
+    pdf_path = f'pdfs/{s_slug}.pdf'
+    if os.path.exists(pdf_path):
+        return f'../pdfs/{s_slug}.pdf'
+    return None
+
 def make_report(s):
     color = TIER_COLORS.get(s['tier'], '#6b7280')
+    pdf_url = get_pdf_link(s)
 
     es_rows = ''
     for label, key in [('Free (Tuition Factor=1)', 'es_free'), ('$10,000', 'es_10k'),
@@ -105,6 +113,8 @@ def make_report(s):
   .tier-badge {{ display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: white; background: {color}; margin-top: 8px; }}
   .back-link {{ display: inline-block; margin-bottom: 12px; color: #2563eb; text-decoration: none; font-size: 14px; }}
   .back-link:hover {{ text-decoration: underline; }}
+  .pdf-link {{ display: inline-block; margin-left: 12px; padding: 4px 14px; background: #dc2626; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500; vertical-align: middle; }}
+  .pdf-link:hover {{ background: #b91c1c; }}
   .container {{ max-width: 960px; margin: 0 auto; padding: 24px; }}
   .grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }}
   @media (max-width: 700px) {{ .grid {{ grid-template-columns: 1fr; }} }}
@@ -129,6 +139,7 @@ def make_report(s):
     <h1>{s['name']}</h1>
     <div class="meta">{s['district']} &bull; {s.get('address') or 'Address N/A'}</div>
     <span class="tier-badge">{s['tier']}</span>
+    {f'<a class="pdf-link" href="{pdf_url}" target="_blank">Download Detailed PDF</a>' if pdf_url else ''}
   </div>
 </div>
 <div class="container">
