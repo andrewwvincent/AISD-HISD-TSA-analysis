@@ -29,6 +29,8 @@ TIER_COLORS = {
 }
 
 def get_pdf_link(s):
+    if s.get('pdf_filename'):
+        return '../pdfs/' + s['pdf_filename']
     s_slug = slug(s['name'])
     pdf_path = f'pdfs/{s_slug}.pdf'
     if os.path.exists(pdf_path):
@@ -38,13 +40,33 @@ def get_pdf_link(s):
 def make_report(s):
     color = TIER_COLORS.get(s['tier'], '#6b7280')
     pdf_url = get_pdf_link(s)
+    batch_label = f'Batch {s.get("batch", 1)}'
 
-    es_rows = ''
-    for label, key in [('Free (Tuition Factor=1)', 'es_free'), ('$10,000', 'es_10k'),
-                        ('$15,000', 'es_15k'), ('$20,000', 'es_20k'), ('$25,000', 'es_25k')]:
-        v = s.get(key)
-        es_rows += f'<tr><td>{label}</td><td class="num">{fmt(v)}</td></tr>\n'
+    # Enrollment scores card
+    has_es = any(s.get(k) for k in ['es_free', 'es_10k', 'es_15k', 'es_20k', 'es_25k'])
+    if has_es:
+        es_rows = ''
+        for label, key in [('Free (Tuition Factor=1)', 'es_free'), ('$10,000', 'es_10k'),
+                            ('$15,000', 'es_15k'), ('$20,000', 'es_20k'), ('$25,000', 'es_25k')]:
+            v = s.get(key)
+            es_rows += f'<tr><td>{label}</td><td class="num">{fmt(v)}</td></tr>\n'
+        es_card = f'<div class="card"><h2>Enrollment Scores by Tuition</h2><table>{es_rows}</table></div>'
+    else:
+        es_card = '<div class="card"><h2>Enrollment Scores by Tuition</h2><p style="color:#6b7280;font-size:13px;padding:8px 0">Demographics data not yet available for this school.</p></div>'
 
+    # Wealth card
+    if s.get('ws_100k') or s.get('raw_kids'):
+        ws_card = f'''<div class="card">
+      <h2>Wealth &amp; Demographics</h2>
+      <table>
+        <tr><td>Wealth Score ($100k+ AGI)</td><td class="num">{fmt(s.get('ws_100k'))}</td></tr>
+        <tr><td>Raw Kids 5-17 (20-min drive)</td><td class="num">{fmt(s.get('raw_kids'))}</td></tr>
+      </table>
+    </div>'''
+    else:
+        ws_card = '<div class="card"><h2>Wealth &amp; Demographics</h2><p style="color:#6b7280;font-size:13px;padding:8px 0">Demographics data not yet available for this school.</p></div>'
+
+    # Property details
     prop_rows = ''
     for label, key, fn in [
         ('Building Size', 'sqft', lambda v: f'{v:,} sqft' if v else 'N/A'),
@@ -57,12 +79,12 @@ def make_report(s):
         val = s.get(key)
         prop_rows += f'<tr><td>{label}</td><td>{fn(val)}</td></tr>\n'
 
+    # Tuition / cost card
     tuition_html = ''
     if s.get('capacity'):
         pb = s.get('payback_years')
         pb_str = f'{pb:.1f} years' if pb else 'N/A'
-        tuition_html = f"""
-    <div class="card">
+        tuition_html = f'''<div class="card">
       <h2>Tuition &amp; Revenue Strategy</h2>
       <table>
         <tr><td>Building Capacity</td><td class="num">{fmt(s['capacity'])} students</td></tr>
@@ -73,32 +95,47 @@ def make_report(s):
         <tr><td>Rehab Cost (Mid)</td><td class="num">{fmtCurrency(s.get('rehab_cost_mid'))}</td></tr>
         <tr><td>Payback Period</td><td class="num">{pb_str}</td></tr>
       </table>
-    </div>"""
+    </div>'''
+    elif s.get('rehab_cost_mid'):
+        tuition_html = f'''<div class="card">
+      <h2>Cost Estimates</h2>
+      <table>
+        <tr><td>Rehab Cost (Mid)</td><td class="num">{fmtCurrency(s.get('rehab_cost_mid'))}</td></tr>
+      </table>
+    </div>'''
 
+    # Sports
     sports_html = ''
     if s.get('indoor_sports') or s.get('outdoor_sports'):
-        sports_html = f"""
-    <div class="card">
+        tsa_match_section = ''
+        if s.get('tsa_match'):
+            tsa_match_section = f'<div class="detail-section"><h3>TSA Sport-Specific Match</h3><p>{s["tsa_match"]}</p></div>'
+        sports_html = f'''<div class="card">
       <h2>Sports Viability</h2>
       <div class="detail-section"><h3>Indoor Sports</h3><p>{s.get('indoor_sports', 'N/A')}</p></div>
       <div class="detail-section"><h3>Outdoor Sports</h3><p>{s.get('outdoor_sports', 'N/A')}</p></div>
-      <div class="detail-section"><h3>TSA Sport-Specific Match</h3><p>{s.get('tsa_match', 'N/A')}</p></div>
-    </div>"""
+      {tsa_match_section}
+    </div>'''
 
+    # Notes
     notes_html = ''
     for label, key in [('Current Status', 'current_status'), ('Building Condition', 'building_condition'),
                         ('Neighborhood', 'neighborhood'), ('Known Issues', 'known_issues')]:
         val = s.get(key)
         if val:
             notes_html += f'<div class="detail-section"><h3>{label}</h3><p>{val}</p></div>\n'
-
     notes_card = f'<div class="card"><h2>Site Notes</h2>{notes_html}</div>' if notes_html else ''
 
+    # Demand score highlight
     demand_highlight = ''
     if s.get('demand_score') is not None:
         demand_highlight = f'<div class="score-highlight"><div class="score">{s["demand_score"]}</div><div class="label">Demand Score</div></div>'
 
-    return f"""<!DOCTYPE html>
+    pdf_link_html = ''
+    if pdf_url:
+        pdf_link_html = f'<a class="pdf-link" href="{pdf_url}" target="_blank">Download Detailed PDF</a>'
+
+    return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -111,6 +148,7 @@ def make_report(s):
   .header h1 {{ font-size: 24px; margin-bottom: 4px; }}
   .header .meta {{ color: #6b7280; font-size: 14px; }}
   .tier-badge {{ display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: white; background: {color}; margin-top: 8px; }}
+  .batch-badge {{ display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; color: white; background: #8b5cf6; margin-left: 8px; margin-top: 8px; }}
   .back-link {{ display: inline-block; margin-bottom: 12px; color: #2563eb; text-decoration: none; font-size: 14px; }}
   .back-link:hover {{ text-decoration: underline; }}
   .pdf-link {{ display: inline-block; margin-left: 12px; padding: 4px 14px; background: #dc2626; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500; vertical-align: middle; }}
@@ -139,23 +177,15 @@ def make_report(s):
     <h1>{s['name']}</h1>
     <div class="meta">{s['district']} &bull; {s.get('address') or 'Address N/A'}</div>
     <span class="tier-badge">{s['tier']}</span>
-    {f'<a class="pdf-link" href="{pdf_url}" target="_blank">Download Detailed PDF</a>' if pdf_url else ''}
+    <span class="batch-badge">{batch_label}</span>
+    {pdf_link_html}
   </div>
 </div>
 <div class="container">
   {demand_highlight}
   <div class="grid">
-    <div class="card">
-      <h2>Enrollment Scores by Tuition</h2>
-      <table>{es_rows}</table>
-    </div>
-    <div class="card">
-      <h2>Wealth &amp; Demographics</h2>
-      <table>
-        <tr><td>Wealth Score ($100k+ AGI)</td><td class="num">{fmt(s.get('ws_100k'))}</td></tr>
-        <tr><td>Raw Kids 5-17 (20-min drive)</td><td class="num">{fmt(s.get('raw_kids'))}</td></tr>
-      </table>
-    </div>
+    {es_card}
+    {ws_card}
   </div>
   <div class="grid">
     <div class="card">
@@ -168,7 +198,7 @@ def make_report(s):
   {notes_card}
 </div>
 </body>
-</html>"""
+</html>'''
 
 os.makedirs('reports', exist_ok=True)
 for s in schools:

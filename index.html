@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TSA Facility Analysis - AISD & HISD School Closures</title>
+<title>TSA Facility Analysis - Texas School Sites</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,16 +21,24 @@
   }
   .filter-panel {
     background: white; padding: 12px 16px; border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 13px; max-width: 220px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 13px; max-width: 240px;
   }
   .filter-panel h4 { margin-bottom: 8px; font-size: 14px; }
   .filter-panel label { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 2px 0; }
   .filter-panel input[type="checkbox"] { cursor: pointer; }
+  .filter-section { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; }
+  .filter-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .filter-section-title { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
   .popup-content { font-size: 13px; line-height: 1.5; min-width: 280px; }
   .popup-content h3 { font-size: 15px; margin-bottom: 4px; }
   .popup-tier {
     display: inline-block; padding: 2px 8px; border-radius: 4px;
     font-size: 11px; font-weight: 600; color: white; margin-bottom: 8px;
+  }
+  .popup-batch {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 500; color: white; background: #8b5cf6;
+    margin-left: 4px; margin-bottom: 8px;
   }
   .popup-content .metric-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px;
@@ -54,12 +62,15 @@
     z-index: 1000; background: white; padding: 8px 20px; border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-size: 14px; font-weight: 500;
   }
+  /* Batch icon styling */
+  .marker-batch1 { border: 3px solid white; }
+  .marker-batch2 { border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.35), 0 0 0 2px #8b5cf6; }
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div class="info-bar">
-  TSA Facility Analysis &mdash; <span id="school-count">45</span> AISD & HISD School Closure Sites
+  TSA Facility Analysis &mdash; <span id="school-count">74</span> Texas School Sites
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -84,32 +95,57 @@ function fmtCurrency(v) { return v != null ? '$' + Number(v).toLocaleString('en-
 function fmtPct(v) { return v != null ? (Number(v) * 100).toFixed(0) + '%' : 'N/A'; }
 function slug(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, ''); }
 
+function getPdfLink(s) {
+  if (s.pdf_filename) return 'pdfs/' + s.pdf_filename;
+  return 'pdfs/' + slug(s.name) + '.pdf';
+}
+
 function makePopup(s) {
   const tierClass = TIER_CLASSES[s.tier] || 'notviable';
+  const batch = s.batch || 1;
+  const batchLabel = `<span class="popup-batch">Batch ${batch}</span>`;
+
+  let metricsHtml;
+  if (s.es_25k != null || s.ws_100k != null) {
+    metricsHtml = `
+      <div class="metric-grid">
+        <div><span class="metric-label">Demand Score</span><br><span class="metric-value">${s.demand_score != null ? s.demand_score : 'N/A'}</span></div>
+        <div><span class="metric-label">ES ($25k)</span><br><span class="metric-value">${fmt(s.es_25k)}</span></div>
+        <div><span class="metric-label">Wealth ($100k+)</span><br><span class="metric-value">${fmt(s.ws_100k)}</span></div>
+        <div><span class="metric-label">Raw Kids 5-17</span><br><span class="metric-value">${fmt(s.raw_kids)}</span></div>
+        <div><span class="metric-label">Building</span><br><span class="metric-value">${s.sqft ? fmt(s.sqft) + ' sqft' : 'N/A'}</span></div>
+        <div><span class="metric-label">Lot</span><br><span class="metric-value">${s.acres ? s.acres + ' acres' : 'N/A'}</span></div>
+      </div>`;
+  } else {
+    metricsHtml = `
+      <div class="metric-grid">
+        <div><span class="metric-label">Campus Score</span><br><span class="metric-value">${s.demand_score != null ? s.demand_score : 'N/A'}</span></div>
+        <div><span class="metric-label">Gym</span><br><span class="metric-value">${s.has_gym || 'N/A'}</span></div>
+        <div><span class="metric-label">Building</span><br><span class="metric-value">${s.sqft ? fmt(s.sqft) + ' sqft' : 'N/A'}</span></div>
+        <div><span class="metric-label">Lot</span><br><span class="metric-value">${s.acres ? s.acres + ' acres' : 'N/A'}</span></div>
+        <div><span class="metric-label">Rehab (Mid)</span><br><span class="metric-value">${s.rehab_cost_mid ? fmtCurrency(s.rehab_cost_mid) : 'N/A'}</span></div>
+        <div><span class="metric-label">Year Built</span><br><span class="metric-value">${s.year_built ? String(s.year_built).slice(0,4) : 'N/A'}</span></div>
+      </div>`;
+  }
+
   let html = `<div class="popup-content">
     <h3>${s.name}</h3>
-    <span class="popup-tier ${tierClass}">${s.tier}</span>
+    <span class="popup-tier ${tierClass}">${s.tier}</span>${batchLabel}
     <div style="color:#666;font-size:12px">${s.district} &bull; ${s.address || 'Address N/A'}</div>
-    <div class="metric-grid">
-      <div><span class="metric-label">Demand Score</span><br><span class="metric-value">${s.demand_score != null ? s.demand_score : 'N/A'}</span></div>
-      <div><span class="metric-label">ES ($25k)</span><br><span class="metric-value">${fmt(s.es_25k)}</span></div>
-      <div><span class="metric-label">Wealth ($100k+)</span><br><span class="metric-value">${fmt(s.ws_100k)}</span></div>
-      <div><span class="metric-label">Raw Kids 5-17</span><br><span class="metric-value">${fmt(s.raw_kids)}</span></div>
-      <div><span class="metric-label">Building</span><br><span class="metric-value">${s.sqft ? fmt(s.sqft) + ' sqft' : 'N/A'}</span></div>
-      <div><span class="metric-label">Lot</span><br><span class="metric-value">${s.acres ? s.acres + ' acres' : 'N/A'}</span></div>
-    </div>
+    ${metricsHtml}
     <a class="report-link" href="reports/${slug(s.name)}.html" target="_blank">View Full Report &rarr;</a>
-    ${s.pdf_available ? `<a class="report-link" href="pdfs/${slug(s.name)}.pdf" target="_blank" style="background:#dc2626;margin-left:6px">PDF &darr;</a>` : ''}
+    ${s.pdf_available ? `<a class="report-link" href="${getPdfLink(s)}" target="_blank" style="background:#dc2626;margin-left:6px">PDF &darr;</a>` : ''}
   </div>`;
   return html;
 }
 
-function createIcon(color) {
+function createIcon(color, batch) {
+  const ring = batch === 2 ? `outline:2px solid #8b5cf6;outline-offset:1px;` : '';
   return L.divIcon({
     className: '',
     html: `<div style="
       width:16px;height:16px;border-radius:50%;background:${color};
-      border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.35);
+      border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.35);${ring}
     "></div>`,
     iconSize: [16, 16],
     iconAnchor: [8, 8],
@@ -123,32 +159,43 @@ async function init() {
   const resp = await fetch('schools_data.json');
   allSchools = await resp.json();
 
-  map = L.map('map').setView([30.0, -96.5], 8);
+  map = L.map('map').setView([30.5, -96.5], 7);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
-  // Add legend
+  // Legend
   const legend = L.control({ position: 'bottomright' });
   legend.onAdd = function() {
     const div = L.DomUtil.create('div', 'legend');
     div.innerHTML = '<h4>Tiers</h4>' +
       Object.entries(TIER_COLORS).map(([tier, color]) =>
         `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${tier}</div>`
-      ).join('');
+      ).join('') +
+      '<div style="margin-top:8px;border-top:1px solid #e5e7eb;padding-top:6px">' +
+      '<div class="legend-item"><div class="legend-dot" style="background:#888;outline:2px solid #8b5cf6;outline-offset:1px"></div>Batch 2 (purple ring)</div>' +
+      '</div>';
     return div;
   };
   legend.addTo(map);
 
-  // Add filter panel
+  // Filter panel with tier + batch filters
   const filter = L.control({ position: 'topright' });
   filter.onAdd = function() {
     const div = L.DomUtil.create('div', 'filter-panel');
-    div.innerHTML = '<h4>Filter Tiers</h4>' +
+    div.innerHTML =
+      '<div class="filter-section">' +
+      '<div class="filter-section-title">Batch</div>' +
+      '<label><input type="checkbox" checked data-batch="1"> Batch 1 &mdash; AISD/HISD Closures (45)</label>' +
+      '<label><input type="checkbox" checked data-batch="2"> Batch 2 &mdash; Private/Charter/Catholic (29)</label>' +
+      '</div>' +
+      '<div class="filter-section">' +
+      '<div class="filter-section-title">Tier</div>' +
       Object.keys(TIER_COLORS).map(tier =>
         `<label><input type="checkbox" checked data-tier="${tier}"> ${tier}</label>`
-      ).join('');
+      ).join('') +
+      '</div>';
     L.DomEvent.disableClickPropagation(div);
     div.addEventListener('change', updateMarkers);
     return div;
@@ -159,22 +206,27 @@ async function init() {
 }
 
 function updateMarkers() {
-  // Remove existing
   markers.forEach(m => map.removeLayer(m));
   markers = [];
 
-  // Get checked tiers
-  const checks = document.querySelectorAll('.filter-panel input[type="checkbox"]');
+  const tierChecks = document.querySelectorAll('.filter-panel input[data-tier]');
   const activeTiers = new Set();
-  checks.forEach(cb => { if (cb.checked) activeTiers.add(cb.dataset.tier); });
+  tierChecks.forEach(cb => { if (cb.checked) activeTiers.add(cb.dataset.tier); });
+
+  const batchChecks = document.querySelectorAll('.filter-panel input[data-batch]');
+  const activeBatches = new Set();
+  batchChecks.forEach(cb => { if (cb.checked) activeBatches.add(Number(cb.dataset.batch)); });
 
   let count = 0;
   const bounds = [];
   allSchools.forEach(s => {
     if (!s.lat || !s.lon) return;
     if (!activeTiers.has(s.tier)) return;
+    const batch = s.batch || 1;
+    if (!activeBatches.has(batch)) return;
+
     const color = TIER_COLORS[s.tier] || '#6b7280';
-    const marker = L.marker([s.lat, s.lon], { icon: createIcon(color) })
+    const marker = L.marker([s.lat, s.lon], { icon: createIcon(color, batch) })
       .bindPopup(makePopup(s), { maxWidth: 320 })
       .addTo(map);
     markers.push(marker);
