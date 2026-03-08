@@ -31,6 +31,32 @@
   .detail-section { margin-bottom: 12px; }
   .detail-section h3 { font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 4px; }
   .detail-section p { font-size: 13px; color: #4b5563; line-height: 1.5; }
+
+  .carousel { position: relative; overflow: hidden; border-radius: 8px; }
+  .carousel-radio { display: none; }
+  .carousel-track { display: flex; transition: transform 0.3s ease; }
+  .carousel-slide { min-width: 100%; position: relative; }
+  .carousel-slide img { width: 100%; display: block; border-radius: 8px; }
+  .carousel-label { position: absolute; bottom: 8px; right: 12px; background: rgba(0,0,0,0.6); color: white; padding: 2px 10px; border-radius: 4px; font-size: 12px; }
+  .carousel-dots { text-align: center; padding: 10px 0 2px; }
+  .carousel-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #d1d5db; margin: 0 4px; cursor: pointer; }
+  .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; padding: 8px 12px; cursor: pointer; font-size: 18px; border-radius: 4px; z-index: 2; user-select: none; }
+  .carousel-prev { left: 8px; }
+  .carousel-next { right: 8px; }
+  .carousel-arrow:hover { background: rgba(0,0,0,0.7); }
+  .carousel-nav { display: none; }
+  .carousel-radio:nth-of-type(1):checked ~ .carousel-track { transform: translateX(-0%); }
+  .carousel-radio:nth-of-type(1):checked ~ .carousel-nav-0 { display: block; }
+  .carousel-radio:nth-of-type(1):checked ~ .carousel-dots .carousel-dot:nth-child(1) { background: #4b5563; }
+  .carousel-radio:nth-of-type(2):checked ~ .carousel-track { transform: translateX(-100%); }
+  .carousel-radio:nth-of-type(2):checked ~ .carousel-nav-1 { display: block; }
+  .carousel-radio:nth-of-type(2):checked ~ .carousel-dots .carousel-dot:nth-child(2) { background: #4b5563; }
+  .carousel-radio:nth-of-type(3):checked ~ .carousel-track { transform: translateX(-200%); }
+  .carousel-radio:nth-of-type(3):checked ~ .carousel-nav-2 { display: block; }
+  .carousel-radio:nth-of-type(3):checked ~ .carousel-dots .carousel-dot:nth-child(3) { background: #4b5563; }
+  .carousel-radio:nth-of-type(4):checked ~ .carousel-track { transform: translateX(-300%); }
+  .carousel-radio:nth-of-type(4):checked ~ .carousel-nav-3 { display: block; }
+  .carousel-radio:nth-of-type(4):checked ~ .carousel-dots .carousel-dot:nth-child(4) { background: #4b5563; }
 </style>
 </head>
 <body>
@@ -45,13 +71,52 @@
   </div>
 </div>
 <div class="container">
-  
-    <div class="card">
+  <div class="card">
       <h2>Street View</h2>
-      <div style="text-align:center">
-        <img src="images/sv-atonement-catholic-academy.jpg" alt="Street view of property" style="max-width:100%;border-radius:8px;margin-bottom:8px" loading="lazy">
-        <p style="font-size:12px;color:#6b7280">Google Street View - 15415 Red Robin Rd, San Antonio, TX 78255</p>
+      <div class="carousel">
+        <input type="radio" name="carousel-atonement-catholic-academy" id="carousel-atonement-catholic-academy-0" class="carousel-radio" checked>
+        <input type="radio" name="carousel-atonement-catholic-academy" id="carousel-atonement-catholic-academy-1" class="carousel-radio">
+        <input type="radio" name="carousel-atonement-catholic-academy" id="carousel-atonement-catholic-academy-2" class="carousel-radio">
+        <input type="radio" name="carousel-atonement-catholic-academy" id="carousel-atonement-catholic-academy-3" class="carousel-radio">
+        <div class="carousel-track">
+          <div class="carousel-slide">
+            <img src="images/sv-atonement-catholic-academy-000.jpg" alt="Street view - North" loading="lazy">
+            <span class="carousel-label">North</span>
+          </div>
+          <div class="carousel-slide">
+            <img src="images/sv-atonement-catholic-academy-090.jpg" alt="Street view - East" loading="lazy">
+            <span class="carousel-label">East</span>
+          </div>
+          <div class="carousel-slide">
+            <img src="images/sv-atonement-catholic-academy-180.jpg" alt="Street view - South" loading="lazy">
+            <span class="carousel-label">South</span>
+          </div>
+          <div class="carousel-slide">
+            <img src="images/sv-atonement-catholic-academy-270.jpg" alt="Street view - West" loading="lazy">
+            <span class="carousel-label">West</span>
+          </div>
+        </div>
+        <div class="carousel-nav carousel-nav-0">
+          <label for="carousel-atonement-catholic-academy-3" class="carousel-arrow carousel-prev">&#10094;</label>
+          <label for="carousel-atonement-catholic-academy-1" class="carousel-arrow carousel-next">&#10095;</label>
+        </div>
+        <div class="carousel-nav carousel-nav-1">
+          <label for="carousel-atonement-catholic-academy-0" class="carousel-arrow carousel-prev">&#10094;</label>
+          <label for="carousel-atonement-catholic-academy-2" class="carousel-arrow carousel-next">&#10095;</label>
+        </div>
+        <div class="carousel-nav carousel-nav-2">
+          <label for="carousel-atonement-catholic-academy-1" class="carousel-arrow carousel-prev">&#10094;</label>
+          <label for="carousel-atonement-catholic-academy-3" class="carousel-arrow carousel-next">&#10095;</label>
+        </div>
+        <div class="carousel-nav carousel-nav-3">
+          <label for="carousel-atonement-catholic-academy-2" class="carousel-arrow carousel-prev">&#10094;</label>
+          <label for="carousel-atonement-catholic-academy-0" class="carousel-arrow carousel-next">&#10095;</label>
+        </div>
+        <div class="carousel-dots">
+          <label for="carousel-atonement-catholic-academy-0" class="carousel-dot"></label><label for="carousel-atonement-catholic-academy-1" class="carousel-dot"></label><label for="carousel-atonement-catholic-academy-2" class="carousel-dot"></label><label for="carousel-atonement-catholic-academy-3" class="carousel-dot"></label>
+        </div>
       </div>
+      <p style="font-size:12px;color:#6b7280;text-align:center;margin-top:8px">Google Street View - 15415 Red Robin Rd, San Antonio, TX 78255</p>
     </div>
 <div class="grid">
     <div class="card"><h2>Enrollment Scores by Tuition</h2><p style="color:#6b7280;font-size:13px;padding:8px 0">Demographics data not yet available for this school.</p></div>
